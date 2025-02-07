@@ -12,6 +12,8 @@ import com.doubledeltas.minecollector.item.itemCode.StaticItem;
 import com.doubledeltas.minecollector.util.CollectionLevelUtil;
 import com.doubledeltas.minecollector.util.MessageUtil;
 import com.doubledeltas.minecollector.util.SoundUtil;
+import com.doubledeltas.minecollector.vault.VaultDirector;
+import com.doubledeltas.minecollector.vault.VaultManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -161,6 +163,19 @@ public class GameDirector {
         );
         for (Player p: announcementConfig.getCollection().resolve(target))
            SoundUtil.playHighRing(p);
+
+        Double prize = VaultDirector.giveReward(target, material);
+        if(prize != null) {
+            MessageUtil.sendRaw(announcementConfig.getCollection(), target, new ComponentBuilder()
+                    .append(target.getName()).color(ChatColor.YELLOW)
+                    .append("님이 ").color(ChatColor.GREEN)
+                    .append(GameDirector.getItemNameComponent(material)).color(ChatColor.YELLOW)
+                    .append(" 수집으로 ").color(ChatColor.GREEN)
+                    .append(prize.toString()).color(ChatColor.GOLD)
+                    .append(" 원을 리워드받았습니다!").color(ChatColor.GREEN)
+                    .create()
+            );
+        }
     }
 
     /**

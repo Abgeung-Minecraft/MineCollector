@@ -10,9 +10,12 @@ import com.doubledeltas.minecollector.event.EventManager;
 import com.doubledeltas.minecollector.item.ItemManager;
 import com.doubledeltas.minecollector.item.manager.InlineItemManager;
 import com.doubledeltas.minecollector.util.MessageUtil;
+import com.doubledeltas.minecollector.vault.VaultManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
+
+import static com.doubledeltas.minecollector.vault.VaultManager.setupEconomy;
 
 public final class MineCollector extends JavaPlugin {
     private final ItemManager itemManager = new InlineItemManager();
@@ -31,6 +34,10 @@ public final class MineCollector extends JavaPlugin {
         DataManager.loadData();
         EventManager.loadEventHandlers();
         CommandRoot.loadCommands();
+        if (!setupEconomy()) {
+            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+        }
         try {
             this.config = ConfigManager.load();
         } catch (InvalidConfigException e) {
