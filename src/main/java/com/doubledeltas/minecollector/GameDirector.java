@@ -57,7 +57,7 @@ public class GameDirector {
                 return;
 
             if (data.getCollection(item.getType()) == 0)
-                noticeFirstCollection(player, item.getType());
+                noticeFirstCollection(player, item);
 
             int oldLevel = data.getLevel(item.getType());
 
@@ -149,9 +149,10 @@ public class GameDirector {
     /**
      * 첫 수집 공지를 띄웁니다.
      * @param target 수집한 플레이어
-     * @param material 수집한 아이템 종류
+     * @param item 수집한 아이템 종류
      */
-    private static void noticeFirstCollection(Player target, Material material) {
+    private static void noticeFirstCollection(Player target, ItemStack item) {
+        Material material = item.getType();
         AnnouncementChapter announcementConfig = MineCollector.getInstance().getMcolConfig().getAnnouncement();
 
         MessageUtil.sendRaw(announcementConfig.getCollection(), target, new ComponentBuilder()
@@ -164,7 +165,7 @@ public class GameDirector {
         for (Player p: announcementConfig.getCollection().resolve(target))
            SoundUtil.playHighRing(p);
 
-        Double prize = VaultDirector.giveReward(target, material);
+        Double prize = VaultDirector.giveReward(target, item);
         if(prize != null) {
             MessageUtil.sendRaw(announcementConfig.getCollection(), target, new ComponentBuilder()
                     .append(target.getName()).color(ChatColor.YELLOW)

@@ -95,7 +95,7 @@ public class GameData {
         throws YAMLException
     {
         Yaml yaml = new Yaml();
-        return new GameData(yaml.loadAs(reader, Map.class));
+        return new GameData((Map) yaml.loadAs(reader, Map.class));
     }
 
     /**
